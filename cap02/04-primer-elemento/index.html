@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>La Heladería</title>
+</head>
+<body>
+    <!-- 1. Contenedor vacío: el punto de anclaje en el DOM que React reclamará como suyo -->
+    <div id="root"></div>
+
+    <script type="module">
+        import React from "https://esm.sh/react@19.2.0?dev";
+        import { createRoot } from "https://esm.sh/react-dom@19.2.0/client?dev";
+
+        // 2. Describir el elemento (todavía NO toca el DOM, solo devuelve un objeto en memoria)
+        // Firma: React.createElement(type, props, ...children)
+        const title = React.createElement("h1", null, "La Heladería");
+        console.log(title);
+
+        // 3. Buscar el contenedor y montar el elemento real en pantalla
+        const container = document.getElementById("root");
+        createRoot(container).render(title);
+    </script>
+</body>
+</html>
