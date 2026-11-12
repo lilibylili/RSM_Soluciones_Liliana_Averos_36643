@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Heladería</title>
+</head>
+<body>
+    <main>
+        <h1>La Heladería</h1>
+        <article>
+            <h2>Mora Silvestre</h2>
+            <p>Mora de Ambato con un toque de limón.</p>
+        </article>
+    </main>
+
+    <!-- type="module" es obligatorio para poder usar 'import' y crea un ámbito cerrado (privado) -->
+    <script type="module">
+        // 1. Paquete 'react': describe la interfaz (sabe qué es un elemento y un componente).
+        // Lleva versión exacta (19.2.0) para evitar cambios inesperados y '?dev' para ver errores claros.
+        import React from "https://esm.sh/react@19.2.0?dev";
+
+        // 2. Paquete 'react-dom': conecta React con el DOM real del navegador usando createRoot.
+        import { createRoot } from "https://esm.sh/react-dom@19.2.0/client?dev";
+
+        // 3. Pruebas en consola (F12) para verificar que ambos paquetes cargaron correctamente
+        console.log("React", React.version);
+        console.log("createRoot es una", typeof createRoot);
+    </script>
+</body>
+</html>
