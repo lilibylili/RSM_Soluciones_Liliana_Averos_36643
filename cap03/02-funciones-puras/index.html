@@ -9,7 +9,7 @@
     <h1>Funciones puras (abre la consola del navegador)</h1>
 
     <script>
-        // Datos base del modelo de La Heladería (pág. 76 / 92)
+        // Datos base del modelo de La Heladería
         const menuItem = {
             id: 1,
             iceCream: {
@@ -22,7 +22,7 @@
             inStock: true,
         };
 
-        // 1. FUNCIÓN PURA: mismo argumento -> siempre el mismo resultado, sin tocar nada de fuera (pág. 91)
+        // 1. FUNCIÓN PURA: mismo argumento -> siempre el mismo resultado
         const formatPrice = (price) =>
             new Intl.NumberFormat("es-EC", {
                 style: "currency",
@@ -33,7 +33,7 @@
         console.log(formatPrice(1.5)); // $1,50
         console.log(formatPrice(1.5)); // $1,50
 
-        // 2. FUGA 1: MIRAR AFUERA -> depende de una variable externa mutable (pág. 92)
+        // 2. FUGA 1: MIRAR AFUERA -> depende de una variable externa
         let taxRate = 0.12;
         const priceWithTax = (price) => price * (1 + taxRate);
 
@@ -42,7 +42,7 @@
         taxRate = 0.15;
         console.log(formatPrice(priceWithTax(1.5))); // $1,72
 
-        // 3. FUGA 2: TOCAR LO QUE TE DIERON -> muta el objeto original (pág. 93)
+        // 3. FUGA 2: TOCAR LO QUE TE DIERON -> muta el objeto original
         const applyDiscount = (item, percent) => {
             item.price = item.price * (1 - percent);
             return item;
@@ -52,9 +52,9 @@
         console.log(formatPrice(menuItem.price)); // $1,50
         const enOferta = applyDiscount(menuItem, 0.2);
         console.log(formatPrice(enOferta.price)); // $1,20
-        console.log(formatPrice(menuItem.price)); // $1,20 (dañó el original)
+        console.log(formatPrice(menuItem.price)); // $1,20
 
-        // 4. DEVOLVER EN VEZ DE MODIFICAR -> crea un objeto nuevo con spread (...) sin mutar el original (pág. 94)
+        // 4. DEVOLVER EN VEZ DE MODIFICAR -> crea un objeto nuevo con spread (...)
         const withDiscount = (item, percent) => ({
             ...item,
             price: item.price * (1 - percent),
@@ -63,31 +63,43 @@
         console.log("--- 4. Copia superficial con spread (withDiscount) ---");
         const rebajado = withDiscount(menuItem, 0.2);
         console.log(formatPrice(rebajado.price)); // $0,96
-        console.log(formatPrice(menuItem.price)); // $1,20 (no volvió a cambiar)
+        console.log(formatPrice(menuItem.price)); // $1,20
 
-        // Verificación de copia superficial (shallow copy): copia el primer nivel, comparte los anidados (pág. 94)
-        console.log(rebajado === menuItem); // false (son dos objetos distintos)
-        console.log(rebajado.iceCream === menuItem.iceCream); // true (iceCream sigue compartido)
+        console.log(rebajado === menuItem); // false
+        console.log(rebajado.iceCream === menuItem.iceCream); // true
 
-        // 5. PRÁCTICA PÁG. 96: Mutar un array vs. devolver un array nuevo
+        // 5. PRÁCTICA EN CLASE · ACTIVIDAD 13: push frente a spread en un array
         const menu = [menuItem];
 
-        // Versión impura: muta el array recibido con .push()
-        const addItemImpure = (menuList, item) => {
-            menuList.push(item);
-            return menuList;
+        // Versión impura: muta el array original con push
+        const addItemPush = (menu, item) => {
+            menu.push(item);
+            return menu;
         };
 
-        // Versión pura: devuelve un array nuevo con [...menuList, item] sin alterar el original
-        const addItemPure = (menuList, item) => [...menuList, item];
+        // Versión pura: devuelve una copia nueva con [...menu, item] sin tocar el original
+        const addItem = (menu, item) => [...menu, item];
 
-        console.log("--- 5. Práctica pág. 96: Arrays puros vs. impuros ---");
-        const menuConCopia = addItemPure(menu, rebajado);
-        console.log("Después de addItemPure, menu.length:", menu.length); // 1 (el original sigue intacto)
-        console.log("menuConCopia.length:", menuConCopia.length); // 2
+        console.log("--- 5. Actividad 13: push frente a spread ---");
 
-        addItemImpure(menu, rebajado);
-        console.log("Después de addItemImpure, menu.length:", menu.length); // 2 (el original fue mutado)
+        // Primero llamamos a la versión pura (spread)
+        addItem(menu, rebajado);
+        console.log(menu.length); // 1 (queda igual, el array original no fue mutado)
+
+        // Luego llamamos a la versión impura (push)
+        addItemPush(menu, rebajado);
+        console.log(menu.length); // 2 (crece, el array original fue mutado)
+
+        /*
+         * PREGUNTA (Actividad 13):
+         * Si addItem muta el menú de la aplicación, ¿quién más se entera del cambio?
+         *
+         * RESPUESTA:
+         * Nadie y menos React. Como el array sigue siendo el mismo en memoria,
+         * React no detecta ningún cambio y no vuelve a renderizar la pantalla;
+         * además, cualquier otro componente que use ese array ve sus datos
+         * alterados sin aviso.
+         */
     </script>
 </body>
 </html>
