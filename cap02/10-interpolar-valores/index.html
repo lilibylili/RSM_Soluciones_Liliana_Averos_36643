@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>La Heladería</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/@babel/standalone@8.0.4/babel.min.js"></script>
+    <script type="text/babel" data-type="module">
+        import React from "https://esm.sh/react@19.2.0?dev";
+        import { createRoot } from "https://esm.sh/react-dom@19.2.0/client?dev";
+
+        // 1. Datos separados del marcado (estructura anidada como llegará del servidor)
+        const menuItem = {
+            id: 1,
+            iceCream: {
+                id: 3,
+                name: "Mora silvestre",
+                imagePath: "images/mora.svg",
+            },
+            description: "Mora de Ambato con un toque de limón.",
+        };
+
+        // 2. Plantilla JSX: las llaves { } interpolan valores de JS en props y contenido
+        // alt="" marca la imagen como decorativa porque el nombre ya está en el <h2>
+        const menu = (
+            <>
+                <main>
+                    <h1>La Heladería</h1>
+                    <article className="menu-item" aria-labelledby="flavor-mora">
+                        <img src={menuItem.iceCream.imagePath} alt="" />
+                        <h2 id="flavor-mora">{menuItem.iceCream.name}</h2>
+                        <p className="menu-item-description">{menuItem.description}</p>
+                    </article>
+                </main>
+                <footer>
+                    <p>La Heladería — Ambato</p>
+                </footer>
+            </>
+        );
+
+        createRoot(document.getElementById("root")).render(menu);
+    </script>
+</body>
+</html>
