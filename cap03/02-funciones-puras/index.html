@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Funciones puras - La Heladería</title>
+</head>
+<body>
+    <h1>Funciones puras (abre la consola del navegador)</h1>
+
+    <script>
+        // Datos base del modelo de La Heladería (pág. 76 / 92)
+        const menuItem = {
+            id: 1,
+            iceCream: {
+                id: 3,
+                name: "Mora silvestre",
+                imagePath: "images/mora.svg",
+            },
+            price: 1.5,
+            description: "Mora de Ambato con un toque de limón.",
+            inStock: true,
+        };
+
+        // 1. FUNCIÓN PURA: mismo argumento -> siempre el mismo resultado, sin tocar nada de fuera (pág. 91)
+        const formatPrice = (price) =>
+            new Intl.NumberFormat("es-EC", {
+                style: "currency",
+                currency: "USD",
+            }).format(price);
+
+        console.log("--- 1. Función pura (formatPrice) ---");
+        console.log(formatPrice(1.5)); // $1,50
+        console.log(formatPrice(1.5)); // $1,50
+
+        // 2. FUGA 1: MIRAR AFUERA -> depende de una variable externa mutable (pág. 92)
+        let taxRate = 0.12;
+        const priceWithTax = (price) => price * (1 + taxRate);
+
+        console.log("--- 2. Fuga 1: Mirar afuera (priceWithTax) ---");
+        console.log(formatPrice(priceWithTax(1.5))); // $1,68
+        taxRate = 0.15;
+        console.log(formatPrice(priceWithTax(1.5))); // $1,72
+
+        // 3. FUGA 2: TOCAR LO QUE TE DIERON -> muta el objeto original (pág. 93)
+        const applyDiscount = (item, percent) => {
+            item.price = item.price * (1 - percent);
+            return item;
+        };
+
+        console.log("--- 3. Fuga 2: Mutar el objeto original (applyDiscount) ---");
+        console.log(formatPrice(menuItem.price)); // $1,50
+        const enOferta = applyDiscount(menuItem, 0.2);
+        console.log(formatPrice(enOferta.price)); // $1,20
+        console.log(formatPrice(menuItem.price)); // $1,20 (dañó el original)
+
+        // 4. DEVOLVER EN VEZ DE MODIFICAR -> crea un objeto nuevo con spread (...) sin mutar el original (pág. 94)
+        const withDiscount = (item, percent) => ({
+            ...item,
+            price: item.price * (1 - percent),
+        });
+
+        console.log("--- 4. Copia superficial con spread (withDiscount) ---");
+        const rebajado = withDiscount(menuItem, 0.2);
+        console.log(formatPrice(rebajado.price)); // $0,96
+        console.log(formatPrice(menuItem.price)); // $1,20 (no volvió a cambiar)
+
+        // Verificación de copia superficial (shallow copy): copia el primer nivel, comparte los anidados (pág. 94)
+        console.log(rebajado === menuItem); // false (son dos objetos distintos)
+        console.log(rebajado.iceCream === menuItem.iceCream); // true (iceCream sigue compartido)
+
+        // 5. PRÁCTICA PÁG. 96: Mutar un array vs. devolver un array nuevo
+        const menu = [menuItem];
+
+        // Versión impura: muta el array recibido con .push()
+        const addItemImpure = (menuList, item) => {
+            menuList.push(item);
+            return menuList;
+        };
+
+        // Versión pura: devuelve un array nuevo con [...menuList, item] sin alterar el original
+        const addItemPure = (menuList, item) => [...menuList, item];
+
+        console.log("--- 5. Práctica pág. 96: Arrays puros vs. impuros ---");
+        const menuConCopia = addItemPure(menu, rebajado);
+        console.log("Después de addItemPure, menu.length:", menu.length); // 1 (el original sigue intacto)
+        console.log("menuConCopia.length:", menuConCopia.length); // 2
+
+        addItemImpure(menu, rebajado);
+        console.log("Después de addItemImpure, menu.length:", menu.length); // 2 (el original fue mutado)
+    </script>
+</body>
+</html>
