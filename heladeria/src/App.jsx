@@ -1,3 +1,9 @@
+import Header from "./components/Header.jsx";
+import Footer from "./components/Footer.jsx";
+import Menu from "./components/Menu.jsx";
+import MenuItem from "./components/MenuItem.jsx";
+import Aviso from "./components/Aviso.jsx";
+
 const menuItem = {
   id: 1,
   iceCream: {
@@ -10,50 +16,14 @@ const menuItem = {
   inStock: true,
 };
 
-const formatPrice = (price) =>
-  new Intl.NumberFormat("es-EC", {
-    style: "currency",
-    currency: "USD",
-  }).format(price);
-
-const Header = () => <h1>La Heladería</h1>;
-
-const Footer = () => (
-  <footer>
-    <p>La Heladería — Ambato</p>
-  </footer>
-);
-
-const Menu = ({ children }) => (
-  <section className="menu" aria-labelledby="menu-title">
-    <h2 id="menu-title">Sabores de hoy</h2>
-    {children}
-  </section>
-);
-
-const MenuItem = ({ menuItem }) => (
-  <article
-    className="menu-item"
-    aria-labelledby={`menu-item-${menuItem.id}-name`}
-  >
-    <img src={menuItem.iceCream.imagePath} alt="" />
-    <h3 id={`menu-item-${menuItem.id}-name`}>
-      {menuItem.iceCream.name}
-    </h3>
-    <p className="menu-item-description">{menuItem.description}</p>
-    <p className="menu-item-price">{formatPrice(menuItem.price)}</p>
-    <p className="menu-item-stock">
-      {menuItem.inStock ? "Disponible hoy" : "Agotado"}
-    </p>
-  </article>
-);
-
 const App = () => (
   <>
     <main>
       <Header />
       <Menu>
-        <MenuItem menuItem={menuItem} />
+        <Aviso>
+          <MenuItem menuItem={menuItem} />
+        </Aviso>
       </Menu>
     </main>
     <Footer />
