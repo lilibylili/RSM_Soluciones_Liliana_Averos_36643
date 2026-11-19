@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>La Heladería</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/@babel/standalone@8.0.4/babel.min.js"></script>
+    <script type="text/babel" data-type="module">
+        import React from "https://esm.sh/react@19.2.0?dev";
+        import { createRoot } from "https://esm.sh/react-dom@19.2.0/client?dev";
+
+        const menuItem = {
+            id: 1,
+            iceCream: {
+                id: 3,
+                name: "Mora silvestre",
+                imagePath: "images/mora.svg",
+            },
+            price: 1.5,
+            description: "Mora de Ambato con un toque de limón.",
+            inStock: true,
+        };
+
+        const formatPrice = (price) =>
+            new Intl.NumberFormat("es-EC", {
+                style: "currency",
+                currency: "USD",
+            }).format(price);
+
+        const Header = () => <h1>La Heladería</h1>;
+
+        const Footer = () => (
+            <footer>
+                <p>La Heladería — Ambato</p>
+            </footer>
+        );
+
+        const Menu = ({ children }) => (
+            <section className="menu" aria-labelledby="menu-title">
+                <h2 id="menu-title">Sabores de hoy</h2>
+                {children}
+            </section>
+        );
+
+        // Practica pag 114: segundo contenedor con aside y children debajo del parrafo
+        const Aviso = ({ children }) => (
+            <aside>
+                <p>Abierto de martes a domingo, de 10:00 a 19:00.</p>
+                {children}
+            </aside>
+        );
+
+        // Accesibilidad pag 113: pasa de h2 a h3 porque Menu ahora tiene el h2
+        const MenuItem = ({ menuItem }) => (
+            <article
+                className="menu-item"
+                aria-labelledby={`menu-item-${menuItem.id}-name`}
+            >
+                <img src={menuItem.iceCream.imagePath} alt="" />
+                <h3 id={`menu-item-${menuItem.id}-name`}>
+                    {menuItem.iceCream.name}
+                </h3>
+                <p className="menu-item-description">{menuItem.description}</p>
+                <p className="menu-item-price">{formatPrice(menuItem.price)}</p>
+                <p className="menu-item-stock">
+                    {menuItem.inStock ? "Disponible hoy" : "Agotado"}
+                </p>
+            </article>
+        );
+
+        const app = (
+            <>
+                <main>
+                    <Header />
+                    <Menu>
+                        <Aviso>
+                            <MenuItem menuItem={menuItem} />
+                        </Aviso>
+                    </Menu>
+                </main>
+                <Footer />
+            </>
+        );
+
+        createRoot(document.getElementById("root")).render(app);
+    </script>
+</body>
+</html>
