@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const formatPrice = (price) =>
   new Intl.NumberFormat("es-EC", {
     style: "currency",
@@ -5,8 +7,12 @@ const formatPrice = (price) =>
   }).format(price);
 
 const MenuItem = ({ menuItem }) => {
+  const [soldOut, setSoldOut] = useState(!menuItem.inStock);
+  const [veces, setVeces] = useState(0);
+
   const handleSoldOut = () => {
-    console.log(`Se marcó como agotado: ${menuItem.iceCream.name}`);
+    setSoldOut(true);
+    setVeces(veces + 1);
   };
 
   const handleViewDetails = () => {
@@ -24,10 +30,11 @@ const MenuItem = ({ menuItem }) => {
       </h3>
       <p className="menu-item-description">{menuItem.description}</p>
       <p className="menu-item-price">{formatPrice(menuItem.price)}</p>
-      <p className="menu-item-stock">
-        {menuItem.inStock ? "Disponible hoy" : "Agotado"}
+      <p className="menu-item-stock" aria-live="polite">
+        {soldOut ? "Agotado" : "Disponible hoy"}
       </p>
-      <button type="button" onClick={handleSoldOut}>
+      <p>Pulsado: {veces}</p>
+      <button type="button" onClick={handleSoldOut} disabled={soldOut}>
         Marcar como agotado
       </button>
       <button type="button" onClick={handleViewDetails}>
