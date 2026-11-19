@@ -87,6 +87,14 @@
         );
 
         createRoot(document.getElementById("root")).render(app);
+
+        /*
+        Pregunta Actividad 16:
+        ¿Por qué Menu no necesita saber qué hay dentro de Aviso?
+
+        Respuesta:
+        Porque cuando escribo Aviso y MenuItem dentro de Menu en la vista principal, React construye primero esos elementos y se los entrega a Menu ya hechos mediante la prop children. Menu solo se encarga de envolver y colocar lo que recibe dentro de su section sin importar qué componentes vengan por dentro.
+        */
     </script>
 </body>
 </html>
